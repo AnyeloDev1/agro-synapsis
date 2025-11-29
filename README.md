@@ -1,0 +1,1 @@
+Plataforma integrada de conocimiento agropecuario que conecta los datos abiertos de investigación (BAC) con las experiencias prácticas de extensionistas (Linkata), facilitando el acceso a soluciones validadas y contextualizadas para técnicos y productores del sector
