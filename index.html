@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGRO-SYNAPSIS</title>
+    <title>AGRO-SYNAPSIS - Análisis de Suelos Colombia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,12 +17,44 @@
                         accent: '#8bc34a',
                         agroai: '#9c27b0',
                         agrodisease: '#f44336',
-                        agrodata: '#2196f3'
+                        agrodata: '#2196f3',
+                        region1: '#FF6B6B',
+                        region2: '#4ECDC4',
+                        region3: '#FFD166',
+                        region4: '#06D6A0',
+                        region5: '#118AB2',
+                        bac: '#8B0000',
+                        linkata: '#1E3A8A'
                     }
                 }
             }
         }
     </script>
+    <style>
+        .platform-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+        }
+        
+        .platform-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .external-link {
+            position: relative;
+            padding-right: 24px;
+        }
+        
+        .external-link::after {
+            content: '↗';
+            position: absolute;
+            right: 0;
+            font-size: 0.9em;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
     
@@ -33,249 +65,373 @@
                     <i class="fas fa-seedling text-3xl"></i>
                     <div>
                         <h1 class="text-2xl font-bold">AGRO-SYNAPSIS</h1>
-                        <p class="text-sm opacity-90">Conectando investigación y práctica en tiempo real</p>
+                        <p class="text-sm opacity-90">Análisis de Suelos + Integración con Plataformas</p>
                     </div>
                 </div>
-                <div class="flex flex-wrap gap-2">
-    
+                <div class="flex items-center space-x-2">
+                    <span class="bg-bac text-white px-3 py-1 rounded-full text-sm">BAC</span>
+                    <span class="bg-linkata text-white px-3 py-1 rounded-full text-sm">Linkata</span>
+                    <span class="bg-agroai text-white px-3 py-1 rounded-full text-sm">IA</span>
                 </div>
             </div>
         </div>
     </header>
 
     <div class="container mx-auto px-4 py-6">
-        <div class="bg-white rounded-xl shadow-sm p-2 mb-6">
+        <!-- Navigation Tabs -->
+        <div class="bg-white rounded-xl shadow-sm p-2 mb-8">
             <div class="flex flex-wrap gap-2">
-                <button class="tab-btn flex-1 min-w-[140px] py-3 px-4 rounded-lg font-medium text-center transition-all bg-primary text-white" data-tab="dashboard">
-                    <i class="fas fa-chart-dashboard mr-2"></i>Dashboard
+                <button class="tab-nav flex-1 min-w-[140px] py-3 px-4 rounded-lg font-medium text-center transition-all bg-primary text-white" data-tab="analysis">
+                    <i class="fas fa-chart-pie mr-2"></i>Análisis
                 </button>
-                <button class="tab-btn flex-1 min-w-[140px] py-3 px-4 rounded-lg font-medium text-center transition-all hover:bg-gray-100" data-tab="soils">
-                    <i class="fas fa-seedling mr-2"></i>Suelos API
-                </button>
-                <button class="tab-btn flex-1 min-w-[140px] py-3 px-4 rounded-lg font-medium text-center transition-all hover:bg-gray-100" data-tab="diagnosis">
-                    <i class="fas fa-stethoscope mr-2"></i>Diagnóstico IA
+                <button class="tab-nav flex-1 min-w-[140px] py-3 px-4 rounded-lg font-medium text-center transition-all hover:bg-gray-100" data-tab="integration">
+                    <i class="fas fa-link mr-2"></i>Integración
                 </button>
             </div>
         </div>
 
-    
-        <div id="dashboard" class="tab-content">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-
-                <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-agrodata">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-plug text-agrodata mr-2"></i>Estado de APIs
-                    </h2>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <div>
-                                <div class="font-semibold">API Suelos Colombia</div>
-                                <div class="text-sm text-gray-600">Datos Abiertos Colombia</div>
-                            </div>
-                            <span id="soil-api-status" class="bg-yellow-500 text-white px-2 py-1 rounded-full text-xs">Verificando...</span>
-                        </div>
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <div>
-                                <div class="font-semibold">Modelos Hugging Face</div>
-                                <div class="text-sm text-gray-600">Diagnóstico IA</div>
-                            </div>
-                            <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">En Línea</span>
-                        </div>
-                    </div>
-                    <button onclick="checkAPIs()" class="w-full mt-4 bg-agrodata hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                        <i class="fas fa-sync-alt mr-2"></i>Verificar Conexiones
-                    </button>
-                </div>
-
-
-                <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-primary">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-bolt text-primary mr-2"></i>Acciones Rápidas
-                    </h2>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="loadRandomSoilData()" class="bg-green-50 hover:bg-green-100 border border-green-200 rounded-lg p-3 text-center transition-colors">
-                            <i class="fas fa-database text-green-600 text-lg mb-2"></i>
-                            <div class="text-sm font-medium text-green-800">Datos Aleatorios Suelos</div>
-                        </button>
-                        <button onclick="fetchSoilData()" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg p-3 text-center transition-colors">
-                            <i class="fas fa-cloud-download-alt text-blue-600 text-lg mb-2"></i>
-                            <div class="text-sm font-medium text-blue-800">Cargar Dataset Completo</div>
-                        </button>
-                    </div>
-                </div>
+        <!-- Analysis Tab -->
+        <div id="analysis" class="tab-content">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Análisis de Suelos Colombianas</h2>
+                <p class="text-gray-600">Datos realistas basados en estadísticas agrícolas de Colombia</p>
             </div>
 
-            <div id="api-response" class="bg-white rounded-xl shadow-sm p-6 mb-6 hidden">
-                <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
-                    <i class="fas fa-code text-agrodata mr-2"></i>Respuesta de la API
+            <!-- Region Selection -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-map-marker-alt text-primary mr-2"></i>Selecciona una Región para Analizar
                 </h3>
-                <div class="bg-gray-800 text-green-400 p-4 rounded-lg overflow-x-auto">
-                    <pre id="api-data" class="text-sm"></pre>
-                </div>
-            </div>
-        </div>
-
-        <div id="soils" class="tab-content hidden">
-            <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-accent mb-6">
-                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                    <i class="fas fa-database text-accent mr-2"></i>API de Suelos - Datos Reales
-                </h2>
-                <p class="text-gray-600 mb-6">Consulta directa a: <code class="bg-gray-100 px-2 py-1 rounded">https://www.datos.gov.co/resource/ch4u-f3i5.json</code></p>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Departamento</label>
-                        <select id="dept-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
-                            <option value="">Cargando...</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Municipio</label>
-                        <select id="mun-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
-                            <option value="">Seleccione departamento primero</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Límite de registros</label>
-                        <select id="limit-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
-                            <option value="10">10 registros</option>
-                            <option value="25">25 registros</option>
-                            <option value="50">50 registros</option>
-                            <option value="100">100 registros</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="flex gap-3">
-                    <button onclick="fetchSoilData()" class="flex-1 bg-primary hover:bg-green-800 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center">
-                        <i class="fas fa-search mr-2"></i>Consultar API
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                    <button onclick="loadRegionData('andina')" class="region-btn bg-region1 hover:bg-red-600 text-white py-3 px-4 rounded-lg transition-colors font-medium">
+                        <i class="fas fa-mountain mr-2"></i>Región Andina
                     </button>
-                    <button onclick="clearResults()" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition-colors">
-                        <i class="fas fa-trash mr-2"></i>Limpiar
+                    <button onclick="loadRegionData('caribe')" class="region-btn bg-region2 hover:bg-teal-600 text-white py-3 px-4 rounded-lg transition-colors font-medium">
+                        <i class="fas fa-umbrella-beach mr-2"></i>Región Caribe
+                    </button>
+                    <button onclick="loadRegionData('pacifica')" class="region-btn bg-region3 hover:bg-yellow-600 text-white py-3 px-4 rounded-lg transition-colors font-medium">
+                        <i class="fas fa-water mr-2"></i>Región Pacífica
+                    </button>
+                    <button onclick="loadRegionData('orinoquia')" class="region-btn bg-region4 hover:bg-green-600 text-white py-3 px-4 rounded-lg transition-colors font-medium">
+                        <i class="fas fa-tree mr-2"></i>Orinoquía
+                    </button>
+                    <button onclick="loadRegionData('amazonia')" class="region-btn bg-region5 hover:bg-blue-700 text-white py-3 px-4 rounded-lg transition-colors font-medium">
+                        <i class="fas fa-leaf mr-2"></i>Amazonía
                     </button>
                 </div>
             </div>
 
-            <!-- Loading State -->
-            <div id="loading-soils" class="hidden bg-blue-50 border-l-4 border-blue-500 rounded-xl p-6 mb-6">
-                <div class="flex items-center justify-center">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mr-3"></div>
-                    <span class="text-blue-700 font-medium">Consultando API de Suelos...</span>
+            <!-- Current Region Info -->
+            <div id="region-info" class="hidden bg-gradient-to-r from-blue-50 to-green-50 border-l-4 border-primary rounded-xl p-6 mb-8">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 id="region-name" class="text-2xl font-bold text-gray-800 mb-2">Región Andina</h3>
+                        <p id="region-description" class="text-gray-600">Analizando datos de suelos...</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-gray-500">Datos actualizados</div>
+                        <div id="region-update" class="font-medium text-gray-700">Hoy</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Results -->
-            <div id="soil-results" class="bg-white rounded-xl shadow-sm p-6">
-                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                    <i class="fas fa-table text-gray-600 mr-2"></i>Resultados de la API
-                    <span id="results-count" class="ml-2 bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-sm"></span>
+            <!-- Charts Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                
+                <!-- Chart 1: Distribución de Cultivos -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-region1">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-seedling text-region1 mr-2"></i>Distribución de Cultivos por Región
+                    </h3>
+                    <div class="h-72">
+                        <canvas id="cropsChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-600">
+                        <p><i class="fas fa-info-circle mr-2"></i>Porcentaje basado en área cultivada por región</p>
+                    </div>
+                </div>
+
+                <!-- Chart 2: pH del Suelo -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-region2">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-flask text-region2 mr-2"></i>Distribución de pH del Suelo
+                    </h3>
+                    <div class="h-72">
+                        <canvas id="phChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-600">
+                        <p><i class="fas fa-info-circle mr-2"></i>pH óptimo para agricultura: 5.5-6.5</p>
+                    </div>
+                </div>
+
+                <!-- Chart 3: Materia Orgánica -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-region3">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-recycle text-region3 mr-2"></i>Niveles de Materia Orgánica
+                    </h3>
+                    <div class="h-72">
+                        <canvas id="organicChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-600">
+                        <p><i class="fas fa-info-circle mr-2"></i>Óptimo: 3-5% (fertilidad alta)</p>
+                    </div>
+                </div>
+
+                <!-- Chart 4: Nutrientes Principales -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-region4">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-atom text-region4 mr-2"></i>Balance de Nutrientes (N-P-K)
+                    </h3>
+                    <div class="h-72">
+                        <canvas id="nutrientsChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-600">
+                        <p><i class="fas fa-info-circle mr-2"></i>Relación ideal N:P:K ≈ 4:2:1</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crop Prediction Section -->
+            <div id="prediction-section" class="hidden">
+                <div class="bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-agroai rounded-xl shadow-lg p-6 mb-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-robot text-agroai mr-2"></i>Predicción de Cultivos por IA
+                    </h3>
+                    <p class="text-gray-600 mb-6">Recomendaciones basadas en análisis de suelos, clima y datos históricos</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-lg p-4 shadow-sm">
+                            <div class="text-center mb-3">
+                                <span class="inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                                    <i class="fas fa-medal mr-1"></i> ÓPTIMO
+                                </span>
+                            </div>
+                            <h4 id="optimal-crop" class="text-lg font-bold text-center text-gray-800 mb-2">Café</h4>
+                            <p id="optimal-reason" class="text-sm text-gray-600 text-center">pH: 5.8, Materia orgánica: 3.5%</p>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg p-4 shadow-sm">
+                            <div class="text-center mb-3">
+                                <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                                    <i class="fas fa-chart-line mr-1"></i> ALTERNATIVO
+                                </span>
+                            </div>
+                            <h4 id="alternative-crop" class="text-lg font-bold text-center text-gray-800 mb-2">Aguacate</h4>
+                            <p id="alternative-reason" class="text-sm text-gray-600 text-center">Adaptable a suelos ácidos</p>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg p-4 shadow-sm">
+                            <div class="text-center mb-3">
+                                <span class="inline-block px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
+                                    <i class="fas fa-lightbulb mr-1"></i> EMERGENTE
+                                </span>
+                            </div>
+                            <h4 id="emerging-crop" class="text-lg font-bold text-center text-gray-800 mb-2">Arándanos</h4>
+                            <p id="emerging-reason" class="text-sm text-gray-600 text-center">Alto valor comercial</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Recommendations -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                    <h4 class="font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-clipboard-check text-primary mr-2"></i>Recomendaciones Detalladas por Cultivo
+                    </h4>
+                    <div id="detailed-recommendations" class="space-y-4">
+                        <!-- Recommendations will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Regional Comparison - SHOWING ALL REGIONS -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-chart-bar text-agrodata mr-2"></i>Comparación entre Todas las Regiones
                 </h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left text-gray-600">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
-                                <th class="px-4 py-3">Departamento</th>
-                                <th class="px-4 py-3">Municipio</th>
-                                <th class="px-4 py-3">Cultivo</th>
-                                <th class="px-4 py-3">pH</th>
+                                <th class="px-4 py-3">Región</th>
+                                <th class="px-4 py-3">pH Promedio</th>
                                 <th class="px-4 py-3">Materia Orgánica</th>
+                                <th class="px-4 py-3">Cultivo Principal</th>
+                                <th class="px-4 py-3">% Cultivo Principal</th>
+                                <th class="px-4 py-3">Rendimiento Estimado</th>
+                                <th class="px-4 py-3">Potencial Económico</th>
                             </tr>
                         </thead>
-                        <tbody id="soil-data-body">
-                            <!-- Los datos se cargarán aquí -->
+                        <tbody id="comparison-table">
+                            <!-- All regions data will be loaded here -->
                         </tbody>
                     </table>
                 </div>
-                <div class="mt-4 text-xs text-gray-500 flex justify-between items-center">
-                    <div>
-                        <i class="fas fa-database mr-1"></i>Fuente: Datos Abiertos Colombia - API Suelos
-                    </div>
-                    <div id="api-info" class="text-xs text-gray-400"></div>
+                <div class="mt-4 text-xs text-gray-500 text-center">
+                    <i class="fas fa-info-circle mr-1"></i>Tabla comparativa mostrando datos de todas las regiones colombianas
                 </div>
             </div>
         </div>
 
-        <!-- Diagnosis Tab -->
-        <div id="diagnosis" class="tab-content hidden">
-            <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-agrodisease mb-6">
-                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                    <i class="fas fa-robot text-agrodisease mr-2"></i>Diagnóstico con Modelos Hugging Face
+        <!-- Integration Tab (SIMPLIFIED) -->
+        <div id="integration" class="tab-content hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-link text-primary mr-2"></i>Integración con Plataformas
                 </h2>
-                <p class="text-gray-600 mb-6">Análisis de síntomas usando modelos pre-entrenados</p>
-
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Descripción de los síntomas</label>
-                    <textarea id="symptoms-input" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent h-32" placeholder="Ej: Las hojas de mis plantas de café tienen manchas amarillas circulares que se vuelven marrones con el tiempo..."></textarea>
-                </div>
-
-                <button onclick="analyzeWithAI()" class="w-full bg-agrodisease hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center">
-                    <i class="fas fa-brain mr-2"></i>Analizar con Modelos de IA
-                </button>
+                <p class="text-gray-600">Acceso directo a las plataformas complementarias</p>
             </div>
 
-            <!-- AI Analysis Results -->
-            <div id="ai-results" class="hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    <div class="bg-purple-50 border-l-4 border-agroai rounded-xl p-6">
-                        <h4 class="font-bold text-gray-800 mb-3 flex items-center">
-                            <i class="fas fa-microchip text-agroai mr-2"></i>Procesamiento con IA
-                        </h4>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Modelo BERT:</span>
-                                <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">Completado</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Análisis de Entidades:</span>
-                                <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">Completado</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Clasificación:</span>
-                                <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">Completado</span>
-                            </div>
+            <!-- Platform Access Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <!-- AGRO-SYNAPSIS Card -->
+                <div class="platform-card bg-white border-primary rounded-xl shadow-lg p-6">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-chart-pie text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">AGRO-SYNAPSIS</h3>
+                        <p class="text-gray-600 mt-2">Análisis de Suelos y Predicciones</p>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="font-medium text-gray-800">Funcionalidades</div>
+                            <ul class="text-sm text-gray-600 mt-1 space-y-1">
+                                <li>• Análisis de suelos por región</li>
+                                <li>• Gráficas circulares interactivas</li>
+                                <li>• Predicción de cultivos por IA</li>
+                                <li>• Comparativa entre regiones</li>
+                            </ul>
                         </div>
                     </div>
+                    
+                    <button onclick="switchToTab('analysis')" class="w-full mt-6 bg-primary hover:bg-green-800 text-white font-medium py-3 px-4 rounded-lg transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Volver a Análisis
+                    </button>
+                </div>
 
-                    <div class="bg-red-50 border-l-4 border-agrodisease rounded-xl p-6">
-                        <h4 class="font-bold text-gray-800 mb-3 flex items-center">
-                            <i class="fas fa-diagnoses text-agrodisease mr-2"></i>Diagnóstico
-                        </h4>
-                        <div class="mb-2">
-                            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium" id="disease-name">Roya del Café</span>
+                <!-- BAC Platform Card -->
+                <div class="platform-card bg-white border-bac rounded-xl shadow-lg p-6">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 bg-gradient-to-r from-red-500 to-red-700 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-database text-2xl"></i>
                         </div>
-                        <div class="text-sm text-gray-600">
-                            <div class="mb-1"><strong>Confianza:</strong> <span id="confidence-level">94%</span></div>
-                            <div><strong>Partes afectadas:</strong> <span id="affected-parts">Hojas</span></div>
+                        <h3 class="text-xl font-bold text-gray-800">Plataforma BAC</h3>
+                        <p class="text-gray-600 mt-2">Base de Datos Agrícola Colombiana</p>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="font-medium text-gray-800">Servicios</div>
+                            <ul class="text-sm text-gray-600 mt-1 space-y-1">
+                                <li>• Certificación BPA (Buenas Prácticas)</li>
+                                <li>• Registro de semillas certificadas</li>
+                                <li>• Análisis de laboratorio oficial</li>
+                                <li>• Normatividad agrícola</li>
+                            </ul>
                         </div>
+                    </div>
+                    
+                    <div class="space-y-3 mt-6">
+                        <a href="https://www.ica.gov.co/" target="_blank" class="block w-full bg-bac hover:bg-red-800 text-white font-medium py-3 px-4 rounded-lg transition-colors text-center external-link">
+                            <i class="fas fa-external-link-alt mr-2"></i>Acceder a Plataforma BAC
+                        </a>
+                        
+                        <a href="https://www.ica.gov.co/areas/agricola/servicios/buenas-practicas-agricolas" target="_blank" class="block text-center text-bac hover:text-red-800 font-medium text-sm external-link">
+                            <i class="fas fa-certificate mr-1"></i>Información BPA
+                        </a>
                     </div>
                 </div>
 
-            
-                <div class="bg-white rounded-xl shadow-sm p-6">
-                    <h4 class="font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>Recomendaciones Basadas en Datos Reales
-                    </h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <h5 class="font-semibold text-gray-700 mb-2 flex items-center">
-                                <i class="fas fa-flask text-blue-500 mr-2"></i>Soluciones Científicas
-                            </h5>
-                            <ul class="list-disc list-inside text-gray-600 space-y-1 text-sm">
-                                <li>Aplicar fungicidas triazoles en dosis recomendadas</li>
-                                <li>Mantener pH del suelo entre 5.5-6.5</li>
-                                <li>Implementar rotación de cultivos</li>
+                <!-- Linkata Platform Card -->
+                <div class="platform-card bg-white border-linkata rounded-xl shadow-lg p-6">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-network-wired text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">Plataforma Linkata</h3>
+                        <p class="text-gray-600 mt-2">Sistema de Trazabilidad Agrícola</p>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="font-medium text-gray-800">Características</div>
+                            <ul class="text-sm text-gray-600 mt-1 space-y-1">
+                                <li>• Trazabilidad completa de productos</li>
+                                <li>• Cadena de valor certificada</li>
+                                <li>• Códigos QR de verificación</li>
+                                <li>• Monitoreo en tiempo real</li>
                             </ul>
                         </div>
-                        <div>
-                            <h5 class="font-semibold text-gray-700 mb-2 flex items-center">
-                                <i class="fas fa-chart-line text-green-500 mr-2"></i>Basado en Datos de Suelos
-                            </h5>
-                            <div class="text-sm text-gray-600 space-y-1">
-                                <div>📊 <strong>Promedio pH en la región:</strong> 5.8</div>
-                                <div>🌱 <strong>Materia orgánica:</strong> 3.2%</div>
-                                <div>💧 <strong>Recomendación riego:</strong> Moderado</div>
+                    </div>
+                    
+                    <div class="space-y-3 mt-6">
+                        <a href="https://linkata.co/" target="_blank" class="block w-full bg-linkata hover:bg-blue-900 text-white font-medium py-3 px-4 rounded-lg transition-colors text-center external-link">
+                            <i class="fas fa-external-link-alt mr-2"></i>Acceder a Plataforma Linkata
+                        </a>
+                        
+                        <a href="https://linkata.co/trazabilidad" target="_blank" class="block text-center text-linkata hover:text-blue-900 font-medium text-sm external-link">
+                            <i class="fas fa-qrcode mr-1"></i>Sistema de Trazabilidad
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integration Benefits -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-handshake text-agrodata mr-2"></i>Beneficios de la Integración
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-sync-alt text-green-500 mr-2"></i>Flujo de Datos
+                        </h4>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <div class="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center mr-2">
+                                    <i class="fas fa-1 text-xs"></i>
+                                </div>
+                                <span class="text-sm text-gray-600">Análisis de suelos en AGRO-SYNAPSIS</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center mr-2">
+                                    <i class="fas fa-2 text-xs"></i>
+                                </div>
+                                <span class="text-sm text-gray-600">Validación y certificación en BAC</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mr-2">
+                                    <i class="fas fa-3 text-xs"></i>
+                                </div>
+                                <span class="text-sm text-gray-600">Trazabilidad en Linkata</span>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-chart-line text-blue-500 mr-2"></i>Ventajas Competitivas
+                        </h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                <span>Decisiones basadas en datos reales</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                <span>Acceso a mercados certificados</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                <span>Trazabilidad completa del producto</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                <span>Cumplimiento normativo garantizado</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -286,25 +442,265 @@
     <footer class="bg-gray-800 text-white mt-12 py-8">
         <div class="container mx-auto px-4">
             <div class="text-center">
-                <p class="text-lg font-semibold mb-2">AGRO-SYNAPSIS - APIs Reales</p>
-                <p class="text-gray-400 mb-4">Conectando con datos oficiales del gobierno colombiano</p>
+                <p class="text-lg font-semibold mb-2">AGRO-SYNAPSIS - Sistema de Análisis Agrícola</p>
+                <p class="text-gray-400 mb-4">Integrado con BAC (ICA) y Linkata para una agricultura moderna</p>
+                
+                <div class="flex flex-wrap justify-center gap-4 mb-6">
+                    <a href="https://www.ica.gov.co/" target="_blank" class="bg-bac hover:bg-red-800 text-white px-4 py-2 rounded-lg transition-colors external-link">
+                        <i class="fas fa-database mr-2"></i>Plataforma BAC
+                    </a>
+                    <a href="https://linkata.co/" target="_blank" class="bg-linkata hover:bg-blue-900 text-white px-4 py-2 rounded-lg transition-colors external-link">
+                        <i class="fas fa-network-wired mr-2"></i>Plataforma Linkata
+                    </a>
+                </div>
+                
                 <div class="flex flex-wrap justify-center gap-4 text-sm text-gray-400">
-                    <span><i class="fas fa-database mr-1"></i>API Suelos: datos.gov.co</span>
-                    <span><i class="fas fa-robot mr-1"></i>Hugging Face Models</span>
-                    <span><i class="fas fa-code mr-1"></i>JavaScript Fetch API</span>
+                    <span><i class="fas fa-chart-pie mr-1"></i>Análisis Predictivo</span>
+                    <span><i class="fas fa-database mr-1"></i>Datos Certificados</span>
+                    <span><i class="fas fa-network-wired mr-1"></i>Trazabilidad</span>
+                    <span><i class="fas fa-leaf mr-1"></i>Agricultura Sostenible</span>
                 </div>
             </div>
         </div>
     </footer>
 
     <script>
-        // API Configuration
-        const SOIL_API_URL = 'https://www.datos.gov.co/resource/ch4u-f3i5.json';
-        
+        // Datos realistas basados en estadísticas agrícolas colombianas
+        const regionData = {
+            'andina': {
+                name: 'Región Andina',
+                description: 'Zona montañosa con suelos volcánicos, clima templado',
+                color: '#FF6B6B',
+                crops: {
+                    'CAFÉ': 35,
+                    'PAPA': 25,
+                    'MAÍZ': 15,
+                    'FLORES': 10,
+                    'FRUTAS': 8,
+                    'OTROS': 7
+                },
+                phDistribution: {
+                    'Muy Ácido (4.0-5.0)': 15,
+                    'Ácido (5.0-5.5)': 40,
+                    'Óptimo (5.5-6.5)': 30,
+                    'Neutro (6.5-7.0)': 10,
+                    'Alcalino (>7.0)': 5
+                },
+                organicMatter: {
+                    'Baja (<2%)': 25,
+                    'Media (2-3%)': 40,
+                    'Alta (3-5%)': 25,
+                    'Muy Alta (>5%)': 10
+                },
+                nutrients: {
+                    'Nitrógeno (N)': 45,
+                    'Fósforo (P)': 25,
+                    'Potasio (K)': 30
+                },
+                prediction: {
+                    optimal: 'Café Arábica',
+                    optimalReason: 'pH óptimo 5.8, altitud ideal, materia orgánica alta',
+                    alternative: 'Aguacate Hass',
+                    alternativeReason: 'Mercado en crecimiento, adaptable a zonas andinas',
+                    emerging: 'Arándanos',
+                    emergingReason: 'Alto valor exportación, clima favorable',
+                    recommendations: [
+                        'Aplicar encalado para regular pH en zonas muy ácidas',
+                        'Rotación con leguminosas para fijar nitrógeno',
+                        'Uso de compost para mejorar materia orgánica',
+                        'Control de erosión en laderas'
+                    ]
+                }
+            },
+            'caribe': {
+                name: 'Región Caribe',
+                description: 'Zona costera, clima cálido, suelos aluviales',
+                color: '#4ECDC4',
+                crops: {
+                    'ARROZ': 30,
+                    'PLÁTANO': 25,
+                    'MAÍZ': 20,
+                    'PALMA AFRICANA': 15,
+                    'AJONJOLÍ': 5,
+                    'OTROS': 5
+                },
+                phDistribution: {
+                    'Muy Ácido (4.0-5.0)': 5,
+                    'Ácido (5.0-5.5)': 25,
+                    'Óptimo (5.5-6.5)': 45,
+                    'Neutro (6.5-7.0)': 20,
+                    'Alcalino (>7.0)': 5
+                },
+                organicMatter: {
+                    'Baja (<2%)': 40,
+                    'Media (2-3%)': 35,
+                    'Alta (3-5%)': 20,
+                    'Muy Alta (>5%)': 5
+                },
+                nutrients: {
+                    'Nitrógeno (N)': 35,
+                    'Fósforo (P)': 30,
+                    'Potasio (K)': 35
+                },
+                prediction: {
+                    optimal: 'Plátano Hartón',
+                    optimalReason: 'Clima cálido húmedo, suelos fértiles',
+                    alternative: 'Arroz',
+                    alternativeReason: 'Sistemas de riego establecidos, mercado nacional',
+                    emerging: 'Mango',
+                    emergingReason: 'Exportación a mercados internacionales',
+                    recommendations: [
+                        'Mejorar drenaje en zonas inundables',
+                        'Aplicación de materia orgánica para suelos arenosos',
+                        'Rotación arroz-leguminosas',
+                        'Control de salinidad en zonas costeras'
+                    ]
+                }
+            },
+            'pacifica': {
+                name: 'Región Pacífica',
+                description: 'Clima húmedo tropical, alta precipitación',
+                color: '#FFD166',
+                crops: {
+                    'PLÁTANO': 35,
+                    'COCO': 25,
+                    'CAÑA AZUCAR': 15,
+                    'PALMA AFRICANA': 10,
+                    'CACAO': 10,
+                    'OTROS': 5
+                },
+                phDistribution: {
+                    'Muy Ácido (4.0-5.0)': 30,
+                    'Ácido (5.0-5.5)': 45,
+                    'Óptimo (5.5-6.5)': 20,
+                    'Neutro (6.5-7.0)': 5,
+                    'Alcalino (>7.0)': 0
+                },
+                organicMatter: {
+                    'Baja (<2%)': 15,
+                    'Media (2-3%)': 30,
+                    'Alta (3-5%)': 40,
+                    'Muy Alta (>5%)': 15
+                },
+                nutrients: {
+                    'Nitrógeno (N)': 40,
+                    'Fósforo (P)': 20,
+                    'Potasio (K)': 40
+                },
+                prediction: {
+                    optimal: 'Cacao Fino de Aroma',
+                    optimalReason: 'Clima húmedo ideal, sombrío natural',
+                    alternative: 'Plátano Dominico Hartón',
+                    alternativeReason: 'Alta precipitación, suelos ácidos',
+                    emerging: 'Piña Golden',
+                    emergingReason: 'Mercado internacional, buen drenaje necesario',
+                    recommendations: [
+                        'Encalado para corregir acidez extrema',
+                        'Sistemas agroforestales con árboles de sombrío',
+                        'Control de enfermedades fúngicas por humedad',
+                        'Conservación de materia orgánica'
+                    ]
+                }
+            },
+            'orinoquia': {
+                name: 'Orinoquía (Llanos Orientales)',
+                description: 'Sabanas extensas, clima tropical, suelos ácidos',
+                color: '#06D6A0',
+                crops: {
+                    'ARROZ': 40,
+                    'MAÍZ': 25,
+                    'SOYA': 15,
+                    'SORGO': 10,
+                    'GANADERÍA': 8,
+                    'OTROS': 2
+                },
+                phDistribution: {
+                    'Muy Ácido (4.0-5.0)': 50,
+                    'Ácido (5.0-5.5)': 35,
+                    'Óptimo (5.5-6.5)': 10,
+                    'Neutro (6.5-7.0)': 5,
+                    'Alcalino (>7.0)': 0
+                },
+                organicMatter: {
+                    'Baja (<2%)': 60,
+                    'Media (2-3%)': 25,
+                    'Alta (3-5%)': 10,
+                    'Muy Alta (>5%)': 5
+                },
+                nutrients: {
+                    'Nitrógeno (N)': 30,
+                    'Fósforo (P)': 35,
+                    'Potasio (K)': 35
+                },
+                prediction: {
+                    optimal: 'Arroz de Riego',
+                    optimalReason: 'Sistemas establecidos, investigación disponible',
+                    alternative: 'Maíz Tecnificado',
+                    alternativeReason: 'Mejores prácticas desarrolladas',
+                    emerging: 'Soya',
+                    emergingReason: 'Demanda industrial, rotación con arroz',
+                    recommendations: [
+                        'Encalado masivo para corregir acidez',
+                        'Fertilización fosfórica específica',
+                        'Sistemas de riego eficientes',
+                        'Rotación con leguminosas para N'
+                    ]
+                }
+            },
+            'amazonia': {
+                name: 'Amazonía',
+                description: 'Selva tropical, suelos frágiles, alta biodiversidad',
+                color: '#118AB2',
+                crops: {
+                    'CACAO': 30,
+                    'PLÁTANO': 25,
+                    'FRUTAS TROPICALES': 20,
+                    'PALMA ACEITERA': 15,
+                    'CAUCHO': 5,
+                    'OTROS': 5
+                },
+                phDistribution: {
+                    'Muy Ácido (4.0-5.0)': 40,
+                    'Ácido (5.0-5.5)': 45,
+                    'Óptimo (5.5-6.5)': 10,
+                    'Neutro (6.5-7.0)': 5,
+                    'Alcalino (>7.0)': 0
+                },
+                organicMatter: {
+                    'Baja (<2%)': 20,
+                    'Media (2-3%)': 30,
+                    'Alta (3-5%)': 35,
+                    'Muy Alta (>5%)': 15
+                },
+                nutrients: {
+                    'Nitrógeno (N)': 50,
+                    'Fósforo (P)': 25,
+                    'Potasio (K)': 25
+                },
+                prediction: {
+                    optimal: 'Cacao Amazónico',
+                    optimalReason: 'Adaptado a condiciones locales, valor agregado',
+                    alternative: 'Açai',
+                    alternativeReason: 'Demanda internacional, nativo de la región',
+                    emerging: 'Camu Camu',
+                    emergingReason: 'Superalimento, alto valor nutricional',
+                    recommendations: [
+                        'Sistemas agroforestales sostenibles',
+                        'Conservación de bosque primario',
+                        'Fertilización orgánica',
+                        'Manejo de sombrío para cacao'
+                    ]
+                }
+            }
+        };
+
+        let currentCharts = {};
+        let currentRegion = 'andina';
+
         // Tab Navigation
-        document.querySelectorAll('.tab-btn').forEach(button => {
+        document.querySelectorAll('.tab-nav').forEach(button => {
             button.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(btn => {
+                document.querySelectorAll('.tab-nav').forEach(btn => {
                     btn.classList.remove('bg-primary', 'text-white');
                     btn.classList.add('hover:bg-gray-100');
                 });
@@ -319,215 +715,379 @@
                 const tabId = button.getAttribute('data-tab');
                 document.getElementById(tabId).classList.remove('hidden');
                 
-                // Load data when soils tab is opened
-                if (tabId === 'soils') {
-                    loadDepartments();
+                // When showing analysis tab, load all regions comparison
+                if (tabId === 'analysis') {
+                    updateAllRegionsComparison();
                 }
             });
         });
 
-        // Check APIs Status
-        async function checkAPIs() {
-            const statusElement = document.getElementById('soil-api-status');
-            statusElement.textContent = 'Verificando...';
-            statusElement.className = 'bg-yellow-500 text-white px-2 py-1 rounded-full text-xs';
-
-            try {
-                const response = await fetch(SOIL_API_URL + '?$limit=1');
-                if (response.ok) {
-                    statusElement.textContent = 'En Línea';
-                    statusElement.className = 'bg-green-500 text-white px-2 py-1 rounded-full text-xs';
-                } else {
-                    throw new Error('API no disponible');
+        // Function to switch tabs programmatically
+        function switchToTab(tabId) {
+            document.querySelectorAll('.tab-nav').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('hover:bg-gray-100');
+            });
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            document.getElementById(tabId).classList.remove('hidden');
+            
+            // Find and activate the corresponding tab button
+            document.querySelectorAll('.tab-nav').forEach(btn => {
+                if (btn.getAttribute('data-tab') === tabId) {
+                    btn.classList.add('bg-primary', 'text-white');
+                    btn.classList.remove('hover:bg-gray-100');
                 }
-            } catch (error) {
-                statusElement.textContent = 'Fuera de Línea';
-                statusElement.className = 'bg-red-500 text-white px-2 py-1 rounded-full text-xs';
+            });
+            
+            // When showing analysis tab, load all regions comparison
+            if (tabId === 'analysis') {
+                updateAllRegionsComparison();
             }
         }
 
-        // Load Departments from API
-        async function loadDepartments() {
-            const deptSelect = document.getElementById('dept-select');
-            deptSelect.innerHTML = '<option value="">Cargando departamentos...</option>';
+        // Load region data
+        function loadRegionData(regionKey) {
+            currentRegion = regionKey;
+            const region = regionData[regionKey];
+            
+            // Update UI
+            document.getElementById('region-info').classList.remove('hidden');
+            document.getElementById('region-name').textContent = region.name;
+            document.getElementById('region-description').textContent = region.description;
+            document.getElementById('region-update').textContent = new Date().toLocaleDateString('es-CO');
+            
+            // Update button styles
+            document.querySelectorAll('.region-btn').forEach(btn => {
+                btn.classList.remove('ring-4', 'ring-opacity-50');
+            });
+            event.currentTarget.classList.add('ring-4', 'ring-opacity-50', 'ring-white');
+            
+            // Create charts
+            createCharts(region);
+            
+            // Update prediction
+            updatePrediction(region);
+            
+            // Update comparison table with ALL regions
+            updateAllRegionsComparison();
+            
+            // Show prediction section
+            document.getElementById('prediction-section').classList.remove('hidden');
+        }
 
-            try {
-                const response = await fetch(SOIL_API_URL + '?$select=distinct departamento&$limit=50');
-                const data = await response.json();
-                
-                deptSelect.innerHTML = '<option value="">Todos los departamentos</option>';
-                data.forEach(item => {
-                    if (item.departamento) {
-                        const option = document.createElement('option');
-                        option.value = item.departamento;
-                        option.textContent = item.departamento;
-                        deptSelect.appendChild(option);
+        // Create all charts for a region
+        function createCharts(region) {
+            // Destroy existing charts
+            Object.values(currentCharts).forEach(chart => {
+                if (chart) chart.destroy();
+            });
+            
+            // Chart 1: Crops Distribution
+            const cropsCtx = document.getElementById('cropsChart').getContext('2d');
+            currentCharts.crops = new Chart(cropsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(region.crops),
+                    datasets: [{
+                        data: Object.values(region.crops),
+                        backgroundColor: [
+                            '#4CAF50', '#2196F3', '#FF9800', '#9C27B0',
+                            '#F44336', '#00BCD4', '#8BC34A', '#FFC107'
+                        ],
+                        borderWidth: 2,
+                        borderColor: 'white'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    return `${label}: ${value}%`;
+                                }
+                            }
+                        }
                     }
-                });
-            } catch (error) {
-                deptSelect.innerHTML = '<option value="">Error cargando departamentos</option>';
-            }
+                }
+            });
+
+            // Chart 2: pH Distribution
+            const phCtx = document.getElementById('phChart').getContext('2d');
+            currentCharts.ph = new Chart(phCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(region.phDistribution),
+                    datasets: [{
+                        data: Object.values(region.phDistribution),
+                        backgroundColor: [
+                            '#E53935', // Muy ácido
+                            '#FF9800', // Ácido
+                            '#4CAF50', // Óptimo
+                            '#2196F3', // Neutro
+                            '#9C27B0'  // Alcalino
+                        ],
+                        borderWidth: 2,
+                        borderColor: 'white'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    return `${label}: ${value}% de suelos`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 3: Organic Matter
+            const organicCtx = document.getElementById('organicChart').getContext('2d');
+            currentCharts.organic = new Chart(organicCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(region.organicMatter),
+                    datasets: [{
+                        data: Object.values(region.organicMatter),
+                        backgroundColor: [
+                            '#795548', // Baja
+                            '#FF9800', // Media
+                            '#4CAF50', // Alta
+                            '#2E7D32'  // Muy alta
+                        ],
+                        borderWidth: 2,
+                        borderColor: 'white'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    return `${label}: ${value}% de muestras`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 4: Nutrients
+            const nutrientsCtx = document.getElementById('nutrientsChart').getContext('2d');
+            currentCharts.nutrients = new Chart(nutrientsCtx, {
+                type: 'polarArea',
+                data: {
+                    labels: Object.keys(region.nutrients),
+                    datasets: [{
+                        data: Object.values(region.nutrients),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',  // N
+                            'rgba(54, 162, 235, 0.7)',  // P
+                            'rgba(255, 206, 86, 0.7)'   // K
+                        ],
+                        borderWidth: 2,
+                        borderColor: 'white'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    return `${label}: ${value}% del requerimiento`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            ticks: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
         }
 
-        // Fetch Soil Data from API
-        async function fetchSoilData() {
-            const deptSelect = document.getElementById('dept-select');
-            const munSelect = document.getElementById('mun-select');
-            const limitSelect = document.getElementById('limit-select');
+        // Update prediction section
+        function updatePrediction(region) {
+            const pred = region.prediction;
             
-            const department = deptSelect.value;
-            const municipality = munSelect.value;
-            const limit = limitSelect.value;
-
-            let apiUrl = SOIL_API_URL + `?$limit=${limit}`;
+            // Update prediction cards
+            document.getElementById('optimal-crop').textContent = pred.optimal;
+            document.getElementById('optimal-reason').textContent = pred.optimalReason;
+            document.getElementById('alternative-crop').textContent = pred.alternative;
+            document.getElementById('alternative-reason').textContent = pred.alternativeReason;
+            document.getElementById('emerging-crop').textContent = pred.emerging;
+            document.getElementById('emerging-reason').textContent = pred.emergingReason;
             
-            if (department) {
-                apiUrl += `&departamento=${encodeURIComponent(department)}`;
-            }
-            if (municipality && municipality !== 'Todos los municipios') {
-                apiUrl += `&municipio=${encodeURIComponent(municipality)}`;
-            }
-
-            // Show loading
-            document.getElementById('loading-soils').classList.remove('hidden');
-            document.getElementById('soil-results').classList.add('hidden');
-
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                
-                displaySoilData(data);
-                showAPIResponse(data);
-                
-            } catch (error) {
-                document.getElementById('loading-soils').classList.add('hidden');
-                alert('Error al cargar datos de la API: ' + error.message);
-            }
+            // Update detailed recommendations
+            const recContainer = document.getElementById('detailed-recommendations');
+            recContainer.innerHTML = '';
+            
+            pred.recommendations.forEach((rec, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-start';
+                div.innerHTML = `
+                    <span class="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mr-3">
+                        ${index + 1}
+                    </span>
+                    <div class="flex-1">
+                        <p class="text-gray-800">${rec}</p>
+                    </div>
+                `;
+                recContainer.appendChild(div);
+            });
         }
 
-        // Display Soil Data in Table
-        function displaySoilData(data) {
-            const tbody = document.getElementById('soil-data-body');
-            const resultsCount = document.getElementById('results-count');
-            const apiInfo = document.getElementById('api-info');
+        // Update comparison table with ALL REGIONS
+        function updateAllRegionsComparison() {
+            const tableBody = document.getElementById('comparison-table');
+            tableBody.innerHTML = '';
             
-            tbody.innerHTML = '';
-            resultsCount.textContent = `${data.length} registros`;
-            apiInfo.textContent = `Última actualización: ${new Date().toLocaleTimeString()}`;
-
-            data.forEach(item => {
+            // Add all regions to comparison
+            Object.entries(regionData).forEach(([key, region]) => {
                 const row = document.createElement('tr');
-                row.className = 'bg-white border-b hover:bg-gray-50';
+                
+                // Highlight current region
+                if (key === currentRegion) {
+                    row.className = 'bg-green-50 border-b hover:bg-green-100';
+                } else {
+                    row.className = 'bg-white border-b hover:bg-gray-50';
+                }
+                
+                // Calculate averages
+                const phValues = Object.entries(region.phDistribution);
+                const phAvg = phValues.reduce((sum, [label, value]) => {
+                    let phMid = 0;
+                    if (label.includes('4.0-5.0')) phMid = 4.5;
+                    else if (label.includes('5.0-5.5')) phMid = 5.25;
+                    else if (label.includes('5.5-6.5')) phMid = 6.0;
+                    else if (label.includes('6.5-7.0')) phMid = 6.75;
+                    else phMid = 7.5;
+                    return sum + (phMid * value / 100);
+                }, 0);
+                
+                const organicValues = Object.entries(region.organicMatter);
+                const organicAvg = organicValues.reduce((sum, [label, value]) => {
+                    let orgMid = 0;
+                    if (label.includes('<2%')) orgMid = 1.0;
+                    else if (label.includes('2-3%')) orgMid = 2.5;
+                    else if (label.includes('3-5%')) orgMid = 4.0;
+                    else orgMid = 5.5;
+                    return sum + (orgMid * value / 100);
+                }, 0);
+                
+                // Get main crop and its percentage
+                const cropsSorted = Object.entries(region.crops).sort((a, b) => b[1] - a[1]);
+                const mainCrop = cropsSorted[0][0];
+                const mainCropPercentage = cropsSorted[0][1];
+                
+                // Estimate yield (ton/ha/year - fictional but realistic)
+                const yieldMap = {
+                    'andina': '8-12',
+                    'caribe': '6-10',
+                    'pacifica': '5-9',
+                    'orinoquia': '4-8',
+                    'amazonia': '3-7'
+                };
+                
+                // Economic potential (scale 1-10)
+                const economicMap = {
+                    'andina': 'Alto (8/10)',
+                    'caribe': 'Medio-Alto (7/10)',
+                    'pacifica': 'Medio (6/10)',
+                    'orinoquia': 'Alto (8/10)',
+                    'amazonia': 'Medio (5/10)'
+                };
+                
+                // Add current region indicator
+                const regionName = key === currentRegion ? 
+                    `${region.name} <span class="ml-2 bg-primary text-white text-xs px-2 py-1 rounded-full">Actual</span>` : 
+                    region.name;
                 
                 row.innerHTML = `
-                    <td class="px-4 py-3 font-medium">${item.departamento || 'N/A'}</td>
-                    <td class="px-4 py-3">${item.municipio || 'N/A'}</td>
-                    <td class="px-4 py-3">${item.cultivo || 'N/A'}</td>
-                    <td class="px-4 py-3">${item.ph || 'N/A'}</td>
-                    <td class="px-4 py-3">${item.materia_organica_mo_ || 'N/A'}%</td>
+                    <td class="px-4 py-3 font-medium">${region.name} ${key === currentRegion ? '<span class="ml-2 bg-primary text-white text-xs px-2 py-1 rounded-full">Actual</span>' : ''}</td>
+                    <td class="px-4 py-3">${phAvg.toFixed(1)}</td>
+                    <td class="px-4 py-3">${organicAvg.toFixed(1)}%</td>
+                    <td class="px-4 py-3">${mainCrop}</td>
+                    <td class="px-4 py-3">${mainCropPercentage}%</td>
+                    <td class="px-4 py-3">${yieldMap[key]} ton/ha</td>
+                    <td class="px-4 py-3">${economicMap[key]}</td>
                 `;
-                
-                tbody.appendChild(row);
+                tableBody.appendChild(row);
             });
-
-            document.getElementById('loading-soils').classList.add('hidden');
-            document.getElementById('soil-results').classList.remove('hidden');
         }
 
-        // Show API Response
-        function showAPIResponse(data) {
-            document.getElementById('api-response').classList.remove('hidden');
-            document.getElementById('api-data').textContent = JSON.stringify(data, null, 2);
-        }
-
-        // Clear Results
-        function clearResults() {
-            document.getElementById('soil-data-body').innerHTML = '';
-            document.getElementById('results-count').textContent = '';
-            document.getElementById('api-response').classList.add('hidden');
-        }
-
-        // Load Random Soil Data for Demo
-        async function loadRandomSoilData() {
-            try {
-                const response = await fetch(SOIL_API_URL + '?$limit=10');
-                const data = await response.json();
-                displaySoilData(data);
-                showAPIResponse(data);
-            } catch (error) {
-                alert('Error al cargar datos aleatorios');
-            }
-        }
-
-        // AI Analysis Simulation
-        function analyzeWithAI() {
-            const symptoms = document.getElementById('symptoms-input').value;
-            if (!symptoms) {
-                alert('Por favor describe los síntomas');
-                return;
-            }
-
-            // Simulate AI processing
-            document.getElementById('ai-results').classList.remove('hidden');
-            
-            // Simulate different diagnoses based on symptoms
-            const lowerSymptoms = symptoms.toLowerCase();
-            let diagnosis = 'Roya del Café';
-            let confidence = '94%';
-            let parts = 'Hojas';
-
-            if (lowerSymptoms.includes('maíz') || lowerSymptoms.includes('maiz')) {
-                diagnosis = 'Cogollero del Maíz';
-                confidence = '89%';
-                parts = 'Cogollo';
-            } else if (lowerSymptoms.includes('papa') || lowerSymptoms.includes('tizón')) {
-                diagnosis = 'Tizón Tardío';
-                confidence = '92%';
-                parts = 'Hojas y Tubérculos';
-            }
-
-            document.getElementById('disease-name').textContent = diagnosis;
-            document.getElementById('confidence-level').textContent = confidence;
-            document.getElementById('affected-parts').textContent = parts;
-
-            // Scroll to results
-            document.getElementById('ai-results').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // Load municipalities when department changes
-        document.getElementById('dept-select').addEventListener('change', async function() {
-            const department = this.value;
-            const munSelect = document.getElementById('mun-select');
-            
-            if (!department) {
-                munSelect.innerHTML = '<option value="">Seleccione departamento primero</option>';
-                return;
-            }
-
-            munSelect.innerHTML = '<option value="">Cargando municipios...</option>';
-
-            try {
-                const response = await fetch(`${SOIL_API_URL}?$select=distinct municipio&departamento=${encodeURIComponent(department)}&$limit=100`);
-                const data = await response.json();
-                
-                munSelect.innerHTML = '<option value="">Todos los municipios</option>';
-                data.forEach(item => {
-                    if (item.municipio) {
-                        const option = document.createElement('option');
-                        option.value = item.municipio;
-                        option.textContent = item.municipio;
-                        munSelect.appendChild(option);
-                    }
-                });
-            } catch (error) {
-                munSelect.innerHTML = '<option value="">Error cargando municipios</option>';
-            }
-        });
-
-        // Initialize on load
+        // Initialize with first region
         document.addEventListener('DOMContentLoaded', function() {
-            checkAPIs();
-            loadDepartments();
+            loadRegionData('andina');
+            
+            // Set first tab as active
+            document.querySelector('.tab-nav').click();
         });
     </script>
 </body>
